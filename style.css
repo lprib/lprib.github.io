@@ -1,0 +1,30 @@
+body {
+    margin: 40px auto;
+    line-height: 1.3;
+    color: #505050;
+    font-size: 19px;
+    background-color: #eeeeee;
+    font-family: serif;
+    max-width: 650px;
+}
+
+h1, h2, h3 {
+    line-height: 1.2;
+}
+
+p {
+    text-align: justify;
+}
+
+#navbar a {
+    -mov-appearance: button;
+    appearance: button;
+    text-decoration: none;
+    color: #777777;
+    padding: 20px;
+    font-family: sans-serif;
+}
+
+#navbar {
+    text-align: center;
+}
