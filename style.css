@@ -26,3 +26,9 @@ p {
 #navbar {
     text-align: center;
 }
+
+#marcher-output {
+    font-family: monospace;
+    font-size: 8pt;
+    white-space: pre;
+}

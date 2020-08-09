@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Liam Pribis: Projects</title>
+    <title>Liam Pribis: Raymarcher</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -17,15 +17,21 @@
         </div>
     </header>
 
-    <h1>hoss mode</h1>
-    <p>some shit here</p>
+    <div id="marcher-output" />
 
     <script type="module">
-        import init, { greet } from './raymarcher_wasm/webmarcher.js';
+        import init, { Configuration, new_configuration, get_line } from './pkg/webmarcher.js';
 
         async function run() {
             await init();
-            greet();
+
+            let conf = new_configuration(-0.450, -0.447, 0.181, 0.306, 3.0, 2, 2.0, 2.5, 2.5);
+
+            let out = document.getElementById("marcher-output");
+            for (var l = 0; l < 50; l++) {
+                out.innerHTML += get_line(conf, l);
+                out.innerHTML += "<br/>";
+            }
         }
 
         run();
