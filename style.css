@@ -17,8 +17,6 @@ p {
 }
 
 #navbar a {
-    -mov-appearance: button;
-    appearance: button;
     text-decoration: none;
     color: #777777;
     padding: 20px;
