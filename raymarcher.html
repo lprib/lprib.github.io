@@ -19,7 +19,17 @@
 
     <h1>hoss mode</h1>
     <p>some shit here</p>
-    <a href="raymarcher.html">raymarcher</a>
+
+    <script type="module">
+        import init, { greet } from './raymarcher_wasm/webmarcher.js';
+
+        async function run() {
+            await init();
+            greet();
+        }
+
+        run();
+    </script>
 </body>
 
 </html>
