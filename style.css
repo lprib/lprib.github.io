@@ -14,6 +14,7 @@ h1, h2, h3 {
 
 p {
     text-align: justify;
+    padding-below: 15px;
 }
 
 #navbar a {
@@ -31,4 +32,25 @@ p {
     font-family: monospace;
     font-size: 8pt;
     white-space: pre;
+}
+
+.figure{
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.figure p{
+    text-align: center;
+}
+
+a {
+    color: #888888
+}
+
+a:visited {
+    color: #888888;
+}
+
+.codeblock {
+    font-size: 14px;
 }

@@ -1,0 +1,371 @@
+<html lang="en">
+
+<head>
+    <title>BrownCode Docs</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div id="navbar">
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="https://github.com/lprib"><img src="github_logo.png" class="navbar-image" alt="github logo"
+                    width="20" /></a>
+        </div>
+    </header>
+
+
+    <h1 id="browncode">BrownCode Documentation</h1>
+    <p><strong>NOTE: </strong>This file is generated from <a
+            href="https://github.com/lprib/browncode/blob/master/README.md">markdown</a> using Pandoc. It may have
+        formatting errors or be out of date.</p>
+    <p>BrownCode is a simple interpreted programming lanuguage.</p>
+    <p>Main ideas:
+    <ul>
+        <li> All data is unsigned 32 bit numbers.
+        </li>
+        <li> Programs contain a <code>.DATA</code> and <code>.CODE</code>
+            section.
+        </li>
+        <li> Data can be baked into the program using the <code>.DATA</code> section of a program. This is similar
+            to the <code>.data</code> section in assembly.
+        </li>
+        <li> The <code>.DATA</code> section is mutable while a program is
+            running.
+        </li>
+        <li> Even variables defined in the code are appended to the <code>.DATA</code> section when they are
+            encountered by the interpreter for the first time.
+        </li>
+        <li> All data is accessed through labels and offsets (variables
+            are just labels in the data section)
+        </li>
+        <li> All variables are global (mostly… see <code>savearg</code> function
+            modifier).
+        </li>
+        <li> Any data structures are done through pointer arithmetic.
+        </li>
+    </ul>
+    </p>
+    <h2 id="syntax">Syntax</h2>
+    <p>Program is split into <code>.DATA</code> and <code>.CODE</code> segments. <code>.DATA</code> can only contain
+        data definitions, <code>.CODE</code> can only contain code.</p>
+
+    <div class="codeblock">
+        <pre><code>#!/usr/bin/browncode
+    .DATA
+    //data definitions
+    .CODE
+    //code</code></pre>
+    </div>
+    <h3 id="data-section">Data section</h3>
+    <table>
+        <colgroup>
+            <col style="width: 50%" />
+            <col style="width: 50%" />
+        </colgroup>
+        <thead>
+            <tr class="header">
+                <th>Syntax</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="odd">
+                <td><code>label:</code></td>
+                <td><code>label</code> points to the following byte index into the data</td>
+            </tr>
+            <tr class="even">
+                <td><code>zeros 5</code></td>
+                <td>Insert 5 zeros</td>
+            </tr>
+            <tr class="odd">
+                <td><code>{05FF}</code></td>
+                <td>Insert the bytes 0x05 and 0xFF</td>
+            </tr>
+            <tr class="even">
+                <td><code>{HEX}</code></td>
+                <td>Insert a byte for every 2 hex characters (must be an even number of characters). This is
+                    <strong>bytewise</strong>, so keep in mind {12345678} will be seen as 0x78563412 when read as big
+                    endian.</td>
+            </tr>
+            <tr class="odd">
+                <td><code>230.</code></td>
+                <td>Insert the unsigned decimal byte 230</td>
+            </tr>
+            <tr class="even">
+                <td><code>503282</code></td>
+                <td>Insert the unsigned 32 bit number 503282, little endian</td>
+            </tr>
+            <tr class="odd">
+                <td><code>0xFFEA</code></td>
+                <td>Insert the unsigned 32 bit hex number, little endian</td>
+            </tr>
+            <tr class="even">
+                <td><code>0b01101111</code></td>
+                <td>Insert the binary <strong>byte</strong> <code>0110 1111</code></td>
+            </tr>
+            <tr class="odd">
+                <td><code>"hello"</code></td>
+                <td>Insert the UTF-8 string. Not null terminated, you must add a <code>0.</code> after to null terminate
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p>Like code, data lines must either be separated by newline(s), or a colon.</p>
+    <h3 id="code-section">Code section</h3>
+    <h4 id="expressions">Expressions</h4>
+    <table>
+        <colgroup>
+            <col style="width: 50%" />
+            <col style="width: 50%" />
+        </colgroup>
+        <thead>
+            <tr class="header">
+                <th>Syntax</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="odd">
+                <td><code>234</code></td>
+                <td>Decimal number</td>
+            </tr>
+            <tr class="even">
+                <td><code>0x23FA6E00</code></td>
+                <td>Hex number</td>
+            </tr>
+            <tr class="odd">
+                <td><code>0b1100</code></td>
+                <td>Binary number (up to 32 digits)</td>
+            </tr>
+            <tr class="even">
+                <td><code>{EXPR}</code></td>
+                <td>The value of the data segment at address EXPR (little endian bytewise addresssing)</td>
+            </tr>
+            <tr class="odd">
+                <td><code>[EXPR]</code></td>
+                <td>The 8 bit value at address EXPR, auto extended to 32 bits</td>
+            </tr>
+            <tr class="even">
+                <td><code>&amp;var</code></td>
+                <td>The address of <code>var</code></td>
+            </tr>
+            <tr class="odd">
+                <td><code>!EXPR</code></td>
+                <td>Logical inversion of EXPR. (EXPR != 0 is true, EXPR = 0 is false)</td>
+            </tr>
+            <tr class="even">
+                <td><code>(EXPR)</code></td>
+                <td>Evaluates to EXPR</td>
+            </tr>
+            <tr class="odd">
+                <td><code>EXPR op EXPR</code></td>
+                <td>Perform the operator on EXPRs. op can be
+                    <code>| ^ &amp; = != &lt; &gt; &lt;= &gt;= &lt;&lt; &gt;&gt; + - * / %</code>. C-like order of
+                    operations is respected.</td>
+            </tr>
+            <tr class="even">
+                <td><code>FUNC(ARG, ARG)</code></td>
+                <td>Calls FUNC with ARGs (may be any number, including 0, args), evaluates to the function’s return</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 id="control-flow-top-level-syntax">Control Flow / Top Level Syntax</h4>
+    <p>The syntax is generally line based, but <code>;</code> is interpreted as a newline. Except for
+        newlines/<code>;</code>, it is whitespace independent (indentation tabs/spaces do not matter).</p>
+    <p>Eg.</p>
+    <div class="codeblock">
+        <pre><code>if a
+        function(b)
+    else
+        function(c)
+    end</code></pre>
+    </div>
+    <p>is equivalent to</p>
+    <div class="codeblock">
+        <pre><code>if a;function(b);else;function(c);end</code></pre>
+    </div>
+    <table>
+        <colgroup>
+            <col style="width: 50%" />
+            <col style="width: 50%" />
+        </colgroup>
+        <thead>
+            <tr class="header">
+                <th>Syntax</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="odd">
+                <td><code>//comment</code></td>
+                <td>comment</td>
+            </tr>
+            <tr class="even">
+                <td><code>EXPR -&gt; VAR</code></td>
+                <td>store result of EXPR into VAR</td>
+            </tr>
+            <tr class="odd">
+                <td><code>EXPR1 -&gt; [EXPR2]</code></td>
+                <td>truncate EXPR1 into an 8 bit value, and store it into the single byte where EXPR2 points</td>
+            </tr>
+            <tr class="even">
+                <td><code>EXPR1 -&gt; {EXPR2}</code></td>
+                <td>store the result of EXPR1 into the 32 bits where EXPR2 points (big endian)</td>
+            </tr>
+            <tr class="odd">
+                <td><code>for VAR, EXPR1, EXPR2;CODE;end</code></td>
+                <td>loop over CODE, incrementing VAR. Start with VAR = EXPR1, end with VAR = EXPR2 - 1. VAR in [EXPR1,
+                    EXPR2)</td>
+            </tr>
+            <tr class="even">
+                <td><code>while EXPR;CODE;end</code></td>
+                <td>loop over CODE while EXPR is non-zero</td>
+            </tr>
+            <tr class="odd">
+                <td><code>if EXPR;CODE;end</code></td>
+                <td>only execute CODE if EXPR is non-zero</td>
+            </tr>
+            <tr class="even">
+                <td><code>if EXPR;CODE;else;CODE;end</code></td>
+                <td>execute first block if EXPR is non-zero, otherwise execute second block of code</td>
+            </tr>
+            <tr class="odd">
+                <td><code>LABEL:</code></td>
+                <td>introduce LABEL that points to the following line of code</td>
+            </tr>
+            <tr class="even">
+                <td><code>goto LABEL</code></td>
+                <td>unconditionally jump to LABEL in the code</td>
+            </tr>
+            <tr class="odd">
+                <td><code>NAME(ARG, ARG)</code></td>
+                <td>calls the function NAME with args, discarding the result</td>
+            </tr>
+            <tr class="even">
+                <td><code>func NAME(ARG, ARG);CODE;end</code></td>
+                <td>define function NAME, which takes the args given. Args must be names, not expressions.</td>
+            </tr>
+            <tr class="odd">
+                <td><code>savearg func NAME(ARG, ARG);CODE;end</code></td>
+                <td>define a function NAME, which takes the args given. (see below)</td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 id="functions">Functions</h4>
+    <p>Functions take arguments, and return a single result. The result is returned by setting a variable named
+        <code>ans</code>. Whatever value <code>ans</code> has when the function returns will be the return value. Early
+        returns are possible through labels and gotos.</p>
+    <p>By default, functions will just set each argument variable defined in their declaration to the calling value.
+        This will clobber other variables by the same name. Example</p>
+    <div class="codeblock">
+        <pre>
+    <code>3 -&gt; x
+    add1(5) -&gt; y
+    // x now unexpectedly equals 5
+    
+    func add1(x)
+        // on calling, 5 is stored in x, which clobbers the previous value of 3
+        x + 1 -&gt; ans
+    end</code>
+    </pre>
+    </div>
+    <p>This problem can be mitigated by using <code>savearg func</code>. This saved the values of the variables used as
+        function parameters, and restores them on function return. In the above example, the value of <code>3</code> for
+        x would be saved when <code>add1</code> is called, and restored when <code>add1</code> returns.</p>
+    <h2 id="intrinsics">Intrinsics</h2>
+    <table>
+        <colgroup>
+            <col style="width: 50%" />
+            <col style="width: 50%" />
+        </colgroup>
+        <thead>
+            <tr class="header">
+                <th>Intrinsic</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="odd">
+                <td><code>numprintln(args...)</code></td>
+                <td>prints each argument on a newline as a unsigned 32 bit decimal</td>
+            </tr>
+            <tr class="even">
+                <td><code>numprint(args...)</code></td>
+                <td>prints each argument as a unsigned 32 bit decimal</td>
+            </tr>
+            <tr class="odd">
+                <td><code>printchar(char)</code></td>
+                <td>prints the character</td>
+            </tr>
+            <tr class="even">
+                <td><code>exit()</code></td>
+                <td>ends the program</td>
+            </tr>
+            <tr class="odd">
+                <td><code>random()</code></td>
+                <td>returns a random 32 bit number</td>
+            </tr>
+            <tr class="even">
+                <td><code>randomrange(start, end)</code></td>
+                <td>returns a number between start and end (TODO inclusive/exclusive?)</td>
+            </tr>
+            <tr class="odd">
+                <td><code>present()</code></td>
+                <td>copies the buffered graphics to the screen</td>
+            </tr>
+            <tr class="even">
+                <td><code>drawcolor(color)</code></td>
+                <td>sets the draw color. Uses RGBA8888 format</td>
+            </tr>
+            <tr class="odd">
+                <td><code>pixel(x, y)</code></td>
+                <td>draws pixel at x and y</td>
+            </tr>
+            <tr class="even">
+                <td><code>fillrect(x, y, w, h)</code></td>
+                <td>draws filled rectangle</td>
+            </tr>
+            <tr class="odd">
+                <td><code>line(x0, y0, x1, y1)</code></td>
+                <td>draws line</td>
+            </tr>
+            <tr class="even">
+                <td><code>keypressed(scancode)</code></td>
+                <td>returns 1 if the scancode is currently pressed, 0 if not. Uses <a
+                        href="https://wiki.libsdl.org/SDLScancodeLookup">SDL2 scancodes</a></td>
+            </tr>
+            <tr class="odd">
+                <td><code>clear()</code></td>
+                <td>clears the screen with the specified draw color. Does not respect the transparency of the draw color
+                </td>
+            </tr>
+            <tr class="even">
+                <td><code>delay(ms)</code></td>
+                <td>pauses for specified amount of milliseconds</td>
+            </tr>
+            <tr class="odd">
+                <td><code>pollexit()</code></td>
+                <td>checks if the window was closed by the user, and exits if it has. You should call this periodically
+                    if you want the window to be closeable.</td>
+            </tr>
+            <tr class="even">
+                <td><code>createmonosprite(ptr, w, h, color)</code></td>
+                <td>creates a monochromatic sprite of given width and height. The bitwise data at pointer describes the
+                    sprite data (1 = specified color, 0 = transparent). Width must be a multiple of 8. Returns a sprite
+                    index which can be used to refer to this sprite when drawing it. NOTE index is always incremented by
+                    1 between succesive calls, so this can be called in a loop while only storing the first index.</td>
+            </tr>
+            <tr class="odd">
+                <td><code>sprite(index, x, y)</code></td>
+                <td>Draws the sprite from the given index at x and y</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</body>
+
+</html>
