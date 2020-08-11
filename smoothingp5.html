@@ -1,0 +1,57 @@
+<html lang="en">
+
+<head>
+    <title>Cronk</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
+    <script src="smoothingsketch.js"></script>
+</head>
+
+<body>
+    <header>
+        <div id="navbar">
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="https://github.com/lprib"><img src="github_logo.png" class="navbar-image" alt="github logo"
+                    width="20" /></a>
+        </div>
+    </header>
+    <h1>Smoothed Minimum rendering</h1>
+    <p>This is a proof-of-concept of a rendering using a "smoothed minimum" function.</p>
+    <pre>function smoothMin(a, b, k) {
+    let h = clamp(0.5 + 0.5 * (a - b) / k, 0.0, 1.0);
+    return lerp(a, b, h) - k * h * (1.0 - h);
+}</pre>
+    <p>
+        The function returns a value close to the minimum while smoothly interpolating between the two input values at
+        the discontinuity. This can be used in conjuntion with distance field rendering to generate a "blob" effect
+        demonstrated below. The goal is for this to be incorporated (in 3 dimensions) into <a
+            href="raymarcher.html">libraymarcher</a>.
+    </p>
+    <p>
+        The below example is generated using <a href="https://p5js.org/">p5.js</a>, based on the original multithreaded
+        prototype in <a href="https://gist.github.com/lprib/d34fd361f9bd7af9ae42983bcd7be116">java</a>. It works by
+        generating a distance field in which every point on the canvas is associated with a distance to to the closest
+        object/circle. The distance should be the minimum of the disances to each object in the scene, calculated using
+        the smooth minimum function. Alpha fading is accomplished by applying a negative exponential to the scene
+        distance field and multiplying it by the smoothed object colors.
+    </p>
+    <p>
+        <input type="range" min="0" max="40" step="1" id="smoothing-slider" name="smoothing">
+        <label for="smoothing">Smoothing amount</label>
+    </p>
+    <p>
+        <input type="range" min="-3" max="2" step="0.001" id="fadeout-slider" name="fadeout">
+        <label for="fadeout">Fadeout coefficient</label>
+    </p>
+    <div class="figure">
+        <main>
+
+        </main>
+        <p>Press any key while the canvas is focused to randomize the scene.</p>
+    </div>
+</body>
+
+</html>

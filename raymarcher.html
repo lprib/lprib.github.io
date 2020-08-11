@@ -1,11 +1,10 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Liam Pribis: Raymarcher</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Cronk</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
     <header>
@@ -16,26 +15,50 @@
                     width="20" /></a>
         </div>
     </header>
-
-    <div id="marcher-output" />
-
-    <script type="module">
-        import init, { Configuration, new_configuration, get_line } from './pkg/webmarcher.js';
-
-        async function run() {
-            await init();
-
-            let conf = new_configuration(-0.450, -0.447, 0.181, 0.306, 3.0, 2, 2.0, 2.5, 2.5);
-
-            let out = document.getElementById("marcher-output");
-            for (var l = 0; l < 50; l++) {
-                out.innerHTML += get_line(conf, l);
-                out.innerHTML += "<br/>";
-            }
-        }
-
-        run();
-    </script>
 </body>
+<h1>
+    Fractal Raymarcher
+
+    <a href="https://github.com/lprib/raymarcher">
+        <svg width="84" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <image width="84" height="20" href="https://img.shields.io/badge/github-0.1.0-5260c4" />
+        </svg>
+    </a>
+</h1>
+
+<h2>Links</h2>
+<ul>
+    <li><a href="https://github.com/lprib/raymarcher">Github</a></li>
+    <li><a href="libraymarcherdoc/libraymarcher/index.html">Libraymarcher documentation</a></li>
+    <li><a href="raymarcherwasm.html">Proof-of-concept compiled to WebAssembly and running in browser</a></li>
+</ul>
+
+<h2>About</h2>
+<p>
+    Raymarching is a method of rendering where a light ray from the camera is iteratively moved forward based on
+    the distance from the ray to an object.
+    This offers an advantage over other rendering techniques (triangle rasterization or raytracing) because
+    the geometry of the scene does not need to be known. Objects in the scene only need to provide a distance field
+    that describes the distance of every point in space to the surface of the object. Based on this distance field,
+    pixels can be rasterized. The component-wise gradient of the distance field give a normal vector, allowing Phong
+    lighting to be calculated.
+</p>
+<p>
+    This project renders <a href="https://en.wikipedia.org/wiki/Julia_set">julia sets</a> in 4d space
+    using quaternions.The same iterative "z^2 + c" technique used for 2d julia sets is employed, but using
+    quaternions instead of complex numbers. Using the differential of the iterative equation, a distance field can
+    be
+    calculated, which is then used bythe raymarcher.
+</p>
+<p>
+    This implementation is written in rust and is fully parallelized. The specific julia set, camera
+    options, rendering options, and colors can be specified on the command line. A minimum working example compiled
+    to
+    webassembly can be viewed <strong><a href="raymarcher.html">here</a></strong>. The renderer is also available in
+    <a href="https://github.com/lprib/libraymarcher/">library form</a>.
+</p>
+<div class="figure">
+    <img src="https://raw.githubusercontent.com/lprib/raymarcher/master/out.gif" />
+</div>
 
 </html>

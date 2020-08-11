@@ -16,75 +16,20 @@
                     width="20" /></a>
         </div>
     </header>
-    <h2>
-        Fractal Raymarcher
+    <a href="raymarcher.html">
+        <h1>Fractal Raymarcher</h1>
+    </a>
+    3D raymarching renderer written in Rust.
 
-        <a href="https://github.com/lprib/raymarcher">
-            <svg width="84" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <image width="84" height="20" href="https://img.shields.io/badge/github-0.1.0-5260c4" />
-            </svg>
-        </a>
-    </h2>
-    <p>
-        Raymarching is a method of rendering where a light ray from the camera is iteratively moved forward based on
-        the distance from the ray to an object.
-        This offers an advantage over other rendering techniques (triangle rasterization or raytracing) because
-        the geometry of the scene does not need to be known. Objects in the scene only need to provide a distance field
-        that describes the distance of every point in space to the surface of the object. Based on this distance field,
-        pixels can be rasterized. The component-wise gradient of the distance field give a normal vector, allowing Phong
-        lighting to be calculated.
-    </p>
-    <p>
-        This project renders <a href="https://en.wikipedia.org/wiki/Julia_set">julia sets</a> in 4d space
-        using quaternions.The same iterative "z^2 + c" technique used for 2d julia sets is employed, but using
-        quaternions instead of complex numbers. Using the differential of the iterative equation, a distance field can
-        be
-        calculated, which is then used bythe raymarcher.
-    </p>
-    <p>
-        This implementation is written in rust and is fully parallelized. The specific julia set, camera
-        options, rendering options, and colors can be specified on the command line. A minimum working example compiled
-        to
-        webassembly can be viewed <strong><a href="raymarcher.html">here</a></strong>. The renderer is also available in
-        <a href="https://github.com/lprib/libraymarcher/">library form</a>.
-    </p>
-    <div class="figure">
-        <img src="https://raw.githubusercontent.com/lprib/raymarcher/master/out.gif" />
-    </div>
+    <a href="browncode.html">
+        <h1>BrownCode</h1>
+    </a>
+    Interpreted programming language.
 
-    <h2>
-        BrownCode
-
-        <a href="https://github.com/lprib/raymarcher">
-            <svg width="84" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <image width="84" height="20" href="https://img.shields.io/badge/github-0.3.0-5260c4" />
-            </svg>
-        </a>
-    </h2>
-
-    <p>
-        BrownCode is a simplistic programming language inspired by <a href="https://axe.eeems.ca/Documentation.pdf">Axe
-            Parser</a>, a programming language for the TI-83/84 series of graphing calculators. It includes easy
-        graphical primitive and shape drawing, and a pseudo data/code section like a compiled binary. More information
-        about the language can be found <strong><a href="browncode.html">here</a></strong>.
-    </p>
-
-    <h3>Example screenshots</h3>
-    <div class="figure">
-        <img src="bc-ss/ss0.png" width="385" height="257" />
-        <p>Random lines program</p>
-    </div>
-
-    <div class="figure">
-        <img src="bc-ss/ss1.png" width="385" height="257" />
-        <p>"Don't hit the sides of the tunnel" game</p>
-    </div>
-
-    <div class="figure">
-        <img src="bc-ss/ss2.png" width="385" height="257" />
-        <p>Drawing with chromatic tail</p>
-    </div>
-
+    <a href="smoothingp5.html">
+        <h1>Smoothed minimum rendering</h1>
+    </a>
+    Proof of concept for smoothed rendering technique.
 
 </body>
 
