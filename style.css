@@ -54,3 +54,8 @@ a:visited {
 .codeblock {
     font-size: 14px;
 }
+
+.command-line {
+    font-size: 10pt;
+    font-family: monospace;
+}

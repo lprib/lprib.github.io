@@ -1,7 +1,7 @@
 <html lang="en">
 
 <head>
-    <title>Cronk</title>
+    <title>Raymarcher</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="style.css">
 </head>
@@ -28,7 +28,8 @@
 
 <h2>Links</h2>
 <ul>
-    <li><a href="https://github.com/lprib/raymarcher">Github</a></li>
+    <li><a href="https://github.com/lprib/raymarcher">Command-line tool github</a></li>
+    <li><a href="https://github.com/lprib/libraymarcher">Library github (unfinished)</a></li>
     <li><a href="libraymarcherdoc/libraymarcher/index.html">Libraymarcher documentation</a></li>
     <li><a href="raymarcherwasm.html">Proof-of-concept compiled to WebAssembly and running in browser</a></li>
 </ul>
@@ -41,14 +42,13 @@
     the geometry of the scene does not need to be known. Objects in the scene only need to provide a distance field
     that describes the distance of every point in space to the surface of the object. Based on this distance field,
     pixels can be rasterized. The component-wise gradient of the distance field give a normal vector, allowing Phong
-    lighting to be calculated.
+    lighting to be calculated "for free".
 </p>
 <p>
     This project renders <a href="https://en.wikipedia.org/wiki/Julia_set">julia sets</a> in 4d space
-    using quaternions.The same iterative "z^2 + c" technique used for 2d julia sets is employed, but using
-    quaternions instead of complex numbers. Using the differential of the iterative equation, a distance field can
-    be
-    calculated, which is then used bythe raymarcher.
+    using quaternions. The same iterative "z^2 + c" technique used for 2d julia sets is employed, but using
+    quaternions instead of complex numbers. Using the derivative of the iterative equation, a distance field can
+    be calculated, which is then used bythe raymarcher.
 </p>
 <p>
     This implementation is written in rust and is fully parallelized. The specific julia set, camera
@@ -59,6 +59,34 @@
 </p>
 <div class="figure">
     <img src="https://raw.githubusercontent.com/lprib/raymarcher/master/out.gif" />
+    <p>Sweeping a 3d hyperplane through a 4d julia set, rendered using libraymarcher.</p>
+</div>
+
+<h2>Gallery</h2>
+The command-line arguments used to generate each image are given.
+
+<p class="command-line">marcher 3d --c=-0.125,-0.256,0.847,0.0895 --aa-level=4 -w600 -h600 --object-color=0.5,0,0.08
+    --zoom=4 --bg-color=0.1,0.1,0.1</p>
+<div class="figure">
+    <img src="marcher-ss/ss0.png">
+</div>
+
+<p class="command-line">marcher 3d --c=-0.2,0.4,-0.4,-0.4 --aa-level=5 -w600 -h600 --object-color=0.3,0.3,0.3 --zoom=1.5
+    --bg-color=0.9,0.9,0.9 --camera-pos=1.5,0.0,1.5 --specular-shininess=2 --specular-color=0.7,0,0</p>
+<div class="figure">
+    <img src="marcher-ss/ss3.png">
+</div>
+
+<p class="command-line">marcher 3d --c=-0.445,0.339,-0.0889,-0.562 --aa-level=5 -w600 -h600 --object-color=0.08,0,0.5
+    --zoom=2 --bg-color=0.1,0.1,0.1 --camera-pos=1.5,0.0,1.5 --specular-shininess=5</p>
+<div class="figure">
+    <img src="marcher-ss/ss1.png">
+</div>
+
+<p class="command-line">marcher 3d --c=-1,0.2,0,0 --aa-level=5 -w600 -h600 --object-color=0.6,0.6,0.6 --zoom=1.5
+    --bg-color=0.1,0.1,0.1 --camera-pos=1.5,0.0,1.5 --specular-shininess=5</p>
+<div class="figure">
+    <img src="marcher-ss/ss2.png">
 </div>
 
 </html>

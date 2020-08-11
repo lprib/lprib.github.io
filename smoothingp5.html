@@ -1,7 +1,7 @@
 <html lang="en">
 
 <head>
-    <title>Cronk</title>
+    <title>Smoothed Minimum Rendering</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="style.css">
 
@@ -18,7 +18,15 @@
                     width="20" /></a>
         </div>
     </header>
-    <h1>Smoothed Minimum rendering</h1>
+    <h1>Smoothed minimum rendering</h1>
+    <h2>Links</h2>
+    <ul>
+        <li><a href="https://gist.github.com/lprib/3a79a03e7328464c86482bfa61be439c">Javascript source</a></li>
+        <li><a href="https://gist.github.com/lprib/d34fd361f9bd7af9ae42983bcd7be116">Java (Processing pde file)
+                source</a>. This version is multithreaded</li>
+    </ul>
+
+    <h2>About</h2>
     <p>This is a proof-of-concept of a rendering using a "smoothed minimum" function.</p>
     <pre>function smoothMin(a, b, k) {
     let h = clamp(0.5 + 0.5 * (a - b) / k, 0.0, 1.0);

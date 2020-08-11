@@ -3,7 +3,8 @@ var FADEOUT_COEF = 0.5;
 let PIXEL_SIZE = 20;
 let MIN_SIZE = 2;
 let MAX_SIZE = 5;
-var NUM_DOTS = 3;
+let NUM_DOTS_MIN = 2;
+let NUM_DOTS_MAX = 5;
 
 scene = [];
 
@@ -12,6 +13,9 @@ function setup() {
     initDots();
     noStroke();
     pixelDensity(1);
+
+    document.getElementById("smoothing-slider").value = 12;
+    document.getElementById("fadeout-slider").value = 0.5;
 }
 
 function draw() {
@@ -30,7 +34,8 @@ function draw() {
 
 function initDots() {
     scene = [];
-    for (let i = 0; i < NUM_DOTS; i++) {
+    let numdots = int(random(NUM_DOTS_MIN, NUM_DOTS_MAX));
+    for (let i = 0; i < numdots; i++) {
         scene.push(new Circle(
             random(0, width / PIXEL_SIZE),
             random(0, height / PIXEL_SIZE),
