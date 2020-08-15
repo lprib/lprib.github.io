@@ -20,12 +20,29 @@
 <h1>
     BrownLogic: Circuit Simulator
 
-    <a href="https://github.com/lprib/brownlogic">
+    <a class="badge" href="https://github.com/lprib/brownlogic">
         <svg width="84" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <image width="84" height="20" href="https://img.shields.io/badge/github-0.2.0-5260c4" />
         </svg>
     </a>
+    <span class="language-tag"><span class="kotlin-circle">⬤</span> kotlin</span>
 </h1>
 
+<h2>Links</h2>
+<ul>
+    <li><a href="https://github.com/lprib/brownlogic">Github repo</a></li>
+</ul>
+
+<h2>About</h2>
+<p>BrownCode is a simple circuit simulator. All wires are strictly binary. Signals are propagated using a combination of
+    synchronized and unsynchronized updates. When an event happens, it updates all of the wires connected to it. These
+    wires will update their neighbors, causing a flood-fil effect. To fix the problem of circular dependencies (ie. a
+    gate's output is directly or indirectly fed back into its input), all nodes that are not wires are synchronized with
+    a global clock. This effectively adds a flip-flop synchonization to the output of each gate.</p>
+
+<div class="figure">
+    <img src="brownlogic-ss/ss0.png" />
+    <p>Example of the BrownLogic circuit editor.</p>
+</div>
 
 </html>

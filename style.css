@@ -10,11 +10,12 @@ body {
 
 h1, h2, h3 {
     line-height: 1.2;
+    padding-top: 1ex;
 }
 
 p {
     text-align: justify;
-    padding-below: 15px;
+    /* padding-bottom: 1.5ex; */
 }
 
 #navbar a {
@@ -58,4 +59,35 @@ a:visited {
 .command-line {
     font-size: 10pt;
     font-family: monospace;
+}
+
+.rust-circle {
+    color: #e6b99a;
+}
+
+.kotlin-circle {
+    color: #ffd694;
+}
+
+.js-circle {
+    color: #bfe8ae;
+}
+
+.java-circle {
+    color: #bbd2f2;
+}
+
+.language-tag {
+    color: #505050;
+    font-size: 15px;
+    font-family: serif;
+    font-weight: normal;
+}
+
+div.language-tag {
+    padding-bottom: 5px;
+}
+
+.badge {
+    text-decoration: none;
 }
