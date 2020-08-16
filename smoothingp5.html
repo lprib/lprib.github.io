@@ -38,8 +38,9 @@
 }</pre>
     <p>
         The function returns a value close to the minimum while smoothly interpolating between the two input values at
-        the discontinuity. This can be used in conjuntion with distance field rendering to generate a "blob" effect
-        demonstrated below. The goal is for this to be incorporated (in 3 dimensions) into <a
+        the discontinuity. The "k" parameter controls the amount of smoothing. At low values, the function acts like a
+        normal minimum function. This can be used in conjuntion with distance field/raymarch rendering to generate the
+        "blob" effect demonstrated below. The goal is for this to be incorporated (in 3 dimensions) into <a
             href="raymarcher.html">libraymarcher</a>.
     </p>
     <p>
