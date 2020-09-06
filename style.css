@@ -41,6 +41,10 @@ p {
     padding-bottom: 30px;
 }
 
+.figure p {
+    text-align: center;
+}
+
 a {
     color: #888888
 }
