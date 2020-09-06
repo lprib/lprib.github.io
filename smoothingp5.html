@@ -7,6 +7,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
     <script src="smoothingsketch.js"></script>
+    <script src="codeHighlighter.js"></script>
 </head>
 
 <body>
@@ -32,10 +33,12 @@
 
     <h2>About</h2>
     <p>This is a proof-of-concept of a rendering using a "smoothed minimum" function.</p>
-    <pre>function smoothMin(a, b, k) {
+    <div class="codeblock" keywords="function let return">
+        <pre>function smoothMin(a, b, k) {
     let h = clamp(0.5 + 0.5 * (a - b) / k, 0.0, 1.0);
     return lerp(a, b, h) - k * h * (1.0 - h);
 }</pre>
+    </div>
     <p>
         The function returns a value close to the minimum while smoothly interpolating between the two input values at
         the discontinuity. The "k" parameter controls the amount of smoothing. At low values, the function acts like a

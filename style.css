@@ -37,11 +37,8 @@ p {
 
 .figure{
     text-align: center;
-    padding-bottom: 20px;
-}
-
-.figure p{
-    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 a {
@@ -90,4 +87,22 @@ div.language-tag {
 
 .badge {
     text-decoration: none;
+}
+
+.codeblock {
+    border:solid 1px;
+}
+
+.codeblock > pre {
+    padding: 5px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
+
+.code-keyword {
+    font-weight: bold;
 }
