@@ -1,0 +1,120 @@
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <div id="navbar">
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="https://github.com/lprib"><img src="github_logo.png" class="navbar-image" alt="github logo"
+                    width="20" /></a>
+        </div>
+    </header>
+</body>
+<h1>
+    Stencil
+
+    <a class="badge" href="https://github.com/lprib/stencil">
+        <svg width="84" height="20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <image width="84" height="20" href="https://img.shields.io/badge/github-1.0.0-5260c4" />
+        </svg>
+    </a>
+    <span class="language-tag"><span class="rust-circle">⬤</span> rust</span>
+</h1>
+
+<h2>Links</h2>
+<li><a href="https://github.com/lprib/stencil">Github repository</a></li>
+
+<h2>About</h2>
+<p>
+    Stencil was developed primarily for color theme coordination between multiple programs with separate configuration
+    files, although it can be used general configuration management as well. Stencil uses a list of template files, and
+    can patch these files and copy them to system locations based on a configuration. Multiple "replacement sets" may be
+    defined, which change what the replacement strings are. Replacement sets may correspond to color themes that can be
+    swapped out, or other configuration data.
+</p>
+
+<h2>Usage</h2>
+<pre class="codeblock"><code>user@name ~ $ stencil --help
+Stencil 1.0
+Liam Pribis &lt;jackpribis@gmail.com&gt;
+System-wide templater
+
+USAGE:
+    stencil [FLAGS] [OPTIONS]
+
+FLAGS:
+    -h, --help         Prints help information
+        --list-sets    list the replacement sets in the current config file
+    -q, --quiet        supress output
+    -V, --version      Prints version information
+    -v, --verbose      verbose output
+
+OPTIONS:
+    -c, --config &lt;CONFIG_DIR_PATH&gt;  set the path of the configuration directory
+    -r, --run &lt;SET&gt;                 run stencil with a given replacement set</code></pre>
+<h3 id="configuration-directory">Configuration directory</h3>
+<p>By default, stencil looks in its working directory for a <code>config.toml</code>. The configuration directory can be
+    overridden using the <code>-c &lt;DIRECTORY&gt;</code> command line flag. The configuration directory contains all
+    templates and backed up files along with the <code>config.toml</code>.</p>
+<h3 id="config.toml">config.toml</h3>
+<h4 id="top-level-options">Top level options</h4>
+<ul>
+    <li><strong>template-before</strong>: <em>string</em>, sets the marker that comes before a templated value.</li>
+    <li><strong>template-after</strong>: <em>string</em>, sets the marker that comes after a templated value.</li>
+    <li><strong>backup</strong>: <em>optional boolean</em>, determines whether files will be backed up in
+        <code>$CONFIG_DIRECTORY/backup/</code> before they are replaced by the templater. If this option is not present,
+        it defaults to <code>true</code>.</li>
+</ul>
+<p>For example:</p>
+<pre class="codeblock"><code>template-before = &quot;!TEMPLATE(&quot;
+template-after = &quot;)&quot;</code></pre>
+<p>will search for substrings of the form <code>!TEMPLATE(name)</code>, and replace them with the specified string
+    associated with <code>name</code> in the replacement set.</p>
+<h4 id="specifying-files-to-be-templated">Specifying files to be templated</h4>
+<p>Files are defined as an array of tables in toml. Each file declaration has the form</p>
+<pre class="codeblock"><code>[[file]]
+path = &quot;/home/user/.config/a-program/config.cfg&quot;
+template = &quot;a-program.template&quot;
+whitelist = [&quot;set-a&quot;, &quot;set-b&quot;]</code></pre>
+<ul>
+    <li><strong>path</strong>: <em>string</em>, the full path where a templated output file should be stored.</li>
+    <li><strong>template</strong>: <em>string</em>, the filename of the template file. This file should exist in the
+        configuration directory. Eg. if <code>template = "foo.template"</code>,
+        <code>$CONFIG_DIRECTORY/foo.template</code> should exist.</li>
+    <li><strong>whitelist</strong>: <em>optional list of strings</em>, if this option is present, only replacement sets
+        in the whitelist will be applied to this file. If a replacement set is run that is not in this list, this file
+        will be skipped for templating.</li>
+</ul>
+<h4 id="specifying-replacement-sets">Specifying replacement sets</h4>
+<p>Replacement sets are a mapping from a name to a replacement string. In TOML, they are represented by a table of
+    tables. Each replacement set has the form</p>
+<pre class="codeblock"><code>[set.name]
+whitelist-only = true
+key-1 = &quot;value 1&quot;
+key-2 = &quot;value 2&quot;
+key-n = &quot;value n&quot;</code></pre>
+<ul>
+    <li><strong>name</strong>: <em>string</em>, the name of this replacement set, used in file whitelists and when
+        running <code>stencil -r &lt;NAME&gt;</code></li>
+    <li><strong>whitelist-only</strong>: <em>optional boolean</em>, if this option is set to <code>true</code>, this
+        replacement set will only apply to files that have specifically whitelisted this replacement set. Otherwise it
+        will be applied to any file that either whitelists it or has no specified whitelist. If not present, it defaults
+        to <code>false</code>.</li>
+    <li><strong>key/value pairs</strong>: <em>string to string map</em>, defines which names in a template will be
+        substituted for which vales.</li>
+</ul>
+<h3 id="backups">Backups</h3>
+<p>To help guard against malformed template files, stencil can optionally back up all files to be templated before they
+    are edited. Backups are saved in <code>$CONFIG_DIRECTORY/backup/</code>, and are names based on a files full path.
+    For example, the file <code>/home/user/Documents/file.txt</code> will be saved as
+    <code>$CONFIG_DIRECTORY/backup/home.user.Documents.file.txt</code>. This naming allows for differentiation of
+    multiple files (eg. if many files have the name <code>config</code>). Backups can be turned off by setting
+    <code>backup = false</code> in the <code>config.toml</code>.</p>
+
+</html>

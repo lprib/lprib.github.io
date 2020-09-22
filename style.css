@@ -91,3 +91,7 @@ div.language-tag {
 .badge {
     text-decoration: none;
 }
+
+.project-link{
+    margin-bottom: 0.5ex;
+}
