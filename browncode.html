@@ -4,6 +4,7 @@
     <title>BrownCode</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="style.css">
+    <script src="codeHighlighter.js"></script>
 </head>
 
 <body>
@@ -57,5 +58,109 @@
     <p>Drawing with chromatic tail</p>
 </div>
 
+
+<h2>Example Program</h2>
+<p>Source code for the "Don't hit the sides of the tunnel" game.</p>
+<div class="codeblock" keywords=".DATA zeros .CODE if end goto func for">
+    <pre>.DATA
+tunnel_offsets:
+zeros 64
+tunnel_widths:
+zeros 64
+
+you_died:
+0b10101110
+0b10100110
+0b01011101
+0b10000000
+
+0b01001010
+0b10100101
+0b01011001
+0b01000000
+
+0b01001110
+0b11100110
+0b01011101
+0b10000000
+
+.CODE
+10 -&gt; current_offset
+80 -&gt; current_width
+0 -&gt; counter
+50 -&gt; player_x
+
+loop:
+drawcolor(0)
+clear()
+
+if keypressed(4); player_x - 1 -&gt; player_x; end
+if keypressed(7); player_x + 1 -&gt; player_x; end
+
+draw_tunnel()
+if (player_x &lt; [&amp;tunnel_offsets + 63] | player_x &gt;= [&amp;tunnel_offsets + 63] + [&amp;tunnel_widths + 63]) &amp; (counter &gt; 63)
+    goto death_screen
+end
+
+drawcolor(0x0000D0FF)
+pixel(player_x, 63)
+
+
+advance_tunnel()
+
+present()
+delay(20)
+pollexit()
+
+goto loop
+
+
+death_screen:
+createmonosprite(&amp;you_died, 32, 3, 0xFF0000FF) -&gt; you_died_idx
+drawcolor(0)
+clear()
+sprite(you_died_idx, 10, 10)
+present()
+
+death_loop:
+delay(10)
+pollexit()
+goto death_loop
+
+
+func draw_tunnel()
+    for i, 0, 64
+        [&amp;tunnel_offsets + i] -&gt; offset
+        [&amp;tunnel_widths + i] -&gt; width
+        drawcolor(0xFFFFFFFF)
+        line(offset, i, offset + width, i)
+    end
+end
+
+func advance_tunnel()
+    randomrange(0, 3) -&gt; rand
+    if rand = 0 &amp; current_offset &gt; 0;
+        current_offset-1 -&gt; current_offset
+    end
+    if rand = 1 &amp; current_offset + current_width &lt; 95
+        current_offset+1 -&gt; current_offset
+    end
+    current_offset -&gt; [&amp;tunnel_offsets]
+
+    for i, 1, 64
+        64 - i -&gt; j
+        // j = [63, 1]
+        [&amp;tunnel_offsets + j - 1] -&gt; [&amp;tunnel_offsets + j]
+        [&amp;tunnel_widths + j - 1] -&gt; [&amp;tunnel_widths + j]
+    end
+
+    counter + 1 -&gt; counter
+    if counter % 10 = 0
+        current_width - 1 -&gt; current_width
+    end
+    current_width -&gt; [&amp;tunnel_widths]
+
+end</pre>
+</div>
 
 </html>

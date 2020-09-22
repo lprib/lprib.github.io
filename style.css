@@ -37,10 +37,11 @@ p {
 
 .figure{
     text-align: center;
-    padding-bottom: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
-.figure p{
+.figure p {
     text-align: center;
 }
 
@@ -94,4 +95,22 @@ div.language-tag {
 
 .project-link{
     margin-bottom: 0.5ex;
+}
+
+.codeblock {
+    border:solid 1px;
+}
+
+.codeblock > pre {
+    padding: 5px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
+
+.code-keyword {
+    font-weight: bold;
 }
